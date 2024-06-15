@@ -1,4 +1,4 @@
-import { InMemoryExpensesRepository } from "@/test/repositories/in-memory-expenses-repository";
+import { InMemoryExpensesRepository } from "test/repositories/in-memory-expenses-repository";
 import { CreateExpenseUseCase } from "./create-expense";
 
 let inMemoryExpensesRepository: InMemoryExpensesRepository;

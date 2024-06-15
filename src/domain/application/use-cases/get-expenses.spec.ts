@@ -1,5 +1,5 @@
-import { makeExpense } from "@/test/factories/make-expense";
-import { InMemoryExpensesRepository } from "@/test/repositories/in-memory-expenses-repository";
+import { makeExpense } from "test/factories/make-expense";
+import { InMemoryExpensesRepository } from "test/repositories/in-memory-expenses-repository";
 import { GetExpensesUseCase } from "./get-expenses";
 
 let inMemoryExpensesRepository: InMemoryExpensesRepository;

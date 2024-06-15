@@ -3,17 +3,32 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "vitest"
+    "dev": "tsx watch src/infra/server.ts",
+    "test": "vitest",
+    "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
+    "test:e2e:watch": "vitest --config ./vitest.config.e2e.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
+  "dependencies": {
+    "@prisma/client": "^5.15.0",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.0",
+    "ioredis": "^5.4.1",
+    "zod": "^3.23.8"
+  },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
     "@types/node": "^20.14.2",
+    "@types/supertest": "^6.0.2",
+    "prisma": "^5.15.0",
+    "supertest": "^7.0.0",
+    "tsx": "^4.15.4",
     "typescript": "^5.4.5",
-    "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^1.6.0"
+    "unplugin-swc": "^1.4.5",
+    "vitest": "^1.6.0",
+    "vitest-tsconfig-paths": "^3.4.1"
   }
 }
