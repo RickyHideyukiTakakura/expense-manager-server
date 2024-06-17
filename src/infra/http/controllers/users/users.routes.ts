@@ -1,5 +1,6 @@
 import { RegisterUserUseCase } from "@/domain/application/use-cases/register-user";
 import { SendAuthenticationLinkUseCase } from "@/domain/application/use-cases/send-authentication-link";
+import { PrismaAuthLinksRepository } from "@/infra/database/prisma/repositories/prisma-auth-links-repository";
 import { PrismaUsersRepository } from "@/infra/database/prisma/repositories/prisma-users-repository";
 import { FastifyInstance } from "fastify";
 import { RegisterUserController } from "./register-user.controller";
@@ -10,7 +11,8 @@ export async function usersRoutes(app: FastifyInstance) {
     new PrismaUsersRepository()
   );
   const sendAuthenticationLinkUseCase = new SendAuthenticationLinkUseCase(
-    new PrismaUsersRepository()
+    new PrismaUsersRepository(),
+    new PrismaAuthLinksRepository()
   );
 
   const sendAuthenticationLinkController = new SendAuthenticationLinkController(

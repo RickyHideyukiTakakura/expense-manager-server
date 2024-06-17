@@ -18,7 +18,8 @@ model User {
   name  String
   email String @unique
 
-  expenses Expense[]
+  expenses  Expense[]
+  authLinks AuthLink[]
 
   @@map("users")
 }
@@ -35,4 +36,15 @@ model Expense {
   user User @relation(fields: [userId], references: [id])
 
   @@map("expenses")
+}
+
+model AuthLink {
+  id        String   @unique @default(uuid())
+  code      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    String   @map("user_id")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("auth_links")
 }

@@ -1,12 +1,18 @@
+import { PrismaClient } from "@prisma/client";
 import { FastifyInstance } from "fastify";
 import request from "supertest";
-import { beforeAll } from "vitest";
+import { UserFactory } from "test/factories/make-user";
 
-describe("Register user E2E", () => {
+describe("Send auth link E2E", () => {
   let app: FastifyInstance;
+  let prisma: PrismaClient;
+  let userFactory: UserFactory;
 
   beforeAll(async () => {
     app = (await import("@/infra/app")).app;
+
+    prisma = new PrismaClient();
+    userFactory = new UserFactory(prisma);
 
     await app.ready();
   });
@@ -15,12 +21,16 @@ describe("Register user E2E", () => {
     await app.close();
   });
 
-  it("should be able to register a new user", async () => {
-    const response = await request(app.server).post("/users").send({
+  it("should be able to send an auth link to authenticate user", async () => {
+    await userFactory.makePrismaUser({
       name: "John Doe",
       email: "johndoe@example.com",
     });
 
-    expect(response.statusCode).toEqual(201);
+    const response = await request(app.server).post("/authenticate").send({
+      email: "johndoe@example.com",
+    });
+
+    expect(response.statusCode).toEqual(200);
   });
 });
