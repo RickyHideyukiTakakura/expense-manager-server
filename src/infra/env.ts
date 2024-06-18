@@ -5,6 +5,7 @@ config();
 
 export const envSchema = z.object({
   NODE_ENV: z.enum(["dev", "test", "production"]).default("dev"),
+  JWT_SECRET_KEY: z.string(),
   API_BASE_URL: z.string().url(),
   AUTH_REDIRECT_URL: z.string().url(),
   DATABASE_URL: z.string().url(),

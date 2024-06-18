@@ -1,16 +1,18 @@
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { AuthLink } from "@/domain/enterprise/entities/auth-link";
-import { Prisma } from "@prisma/client";
+import { Prisma, AuthLink as PrismaAuthLink } from "@prisma/client";
 
 export class PrismaAuthLinkMapper {
-  // static toDomain(raw: PrismaAuthLink): AuthLink {
-  //   return AuthLink.create(
-  //     {
-  //       name: raw.name,
-  //       email: raw.email,
-  //     },
-  //     new UniqueEntityID(raw.id)
-  //   );
-  // }
+  static toDomain(raw: PrismaAuthLink): AuthLink {
+    return AuthLink.create(
+      {
+        userId: new UniqueEntityID(raw.userId),
+        code: raw.code,
+        createdAt: raw.createdAt,
+      },
+      new UniqueEntityID(raw.id)
+    );
+  }
 
   static toPrisma(authLink: AuthLink): Prisma.AuthLinkUncheckedCreateInput {
     return {

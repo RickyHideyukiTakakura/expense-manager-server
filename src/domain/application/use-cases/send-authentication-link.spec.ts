@@ -19,7 +19,7 @@ describe("Send Authenticate Link Use Case", () => {
     );
   });
 
-  it("should be able to authenticate a user", async () => {
+  it("should be able to send an authentication link to the user", async () => {
     const user = makeUser({
       email: "johndoe@example.com",
     });

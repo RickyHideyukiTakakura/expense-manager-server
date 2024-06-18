@@ -32,7 +32,7 @@ export class SendAuthenticationLinkController {
 
     const { authLinkCode } = result.value;
 
-    const authLink = new URL("/auth-link/authenticate", env.API_BASE_URL);
+    const authLink = new URL("/auth-links/authenticate", env.API_BASE_URL);
     authLink.searchParams.set("code", authLinkCode);
     authLink.searchParams.set("redirect", env.AUTH_REDIRECT_URL);
 

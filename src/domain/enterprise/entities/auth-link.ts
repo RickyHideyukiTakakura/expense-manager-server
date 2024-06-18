@@ -3,8 +3,8 @@ import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 
 export interface AuthLinkProps {
+  userId: UniqueEntityID;
   code: string;
-  userId: string;
   createdAt: Date;
 }
 
