@@ -13,11 +13,11 @@ export class PrismaUserMapper {
     );
   }
 
-  static toPrisma(student: User): Prisma.UserUncheckedCreateInput {
+  static toPrisma(user: User): Prisma.UserUncheckedCreateInput {
     return {
-      id: student.id.toString(),
-      name: student.name,
-      email: student.email,
+      id: user.id.toString(),
+      name: user.name,
+      email: user.email,
     };
   }
 }

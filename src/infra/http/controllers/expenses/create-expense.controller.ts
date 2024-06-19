@@ -1,12 +1,11 @@
 import { CreateExpenseUseCase } from "@/domain/application/use-cases/create-expense";
-import { UserAlreadyExistsError } from "@/domain/application/use-cases/errors/user-already-exists-error";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 const createExpenseBodySchema = z.object({
   description: z.string(),
   category: z.string(),
-  method: z.string(),
+  payment: z.string(),
   price: z.number(),
 });
 
@@ -14,27 +13,19 @@ export class CreateExpenseController {
   constructor(private createExpense: CreateExpenseUseCase) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    const { description, category, method, price } =
+    const { description, category, payment, price } =
       createExpenseBodySchema.parse(request.body);
 
     const result = await this.createExpense.execute({
-      userId:,
+      userId: request.user.sub,
       description,
       category,
-      method,
+      payment,
       price,
     });
 
     if (result.isLeft()) {
-      const error = result.value;
-
-      if (error instanceof UserAlreadyExistsError) {
-        return reply.status(409).send({
-          message: error.message,
-        });
-      }
-
-      throw error;
+      throw new Error("Bad request");
     }
 
     return reply.status(201).send();

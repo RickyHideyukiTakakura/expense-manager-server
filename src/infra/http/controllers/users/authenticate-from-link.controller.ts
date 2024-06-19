@@ -37,6 +37,7 @@ export class AuthenticateFromLinkController {
     reply.setCookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
+      maxAge: 7 * 86400,
       path: "/",
     });
 

@@ -35,11 +35,9 @@ export async function usersRoutes(app: FastifyInstance) {
   app.post("/users", (request, reply) =>
     registerUserController.handle(request, reply)
   );
-
   app.post("/authenticate", (request, reply) =>
     sendAuthenticationLinkController.handle(request, reply)
   );
-
   app.get("/auth-links/authenticate", (request, reply) =>
     authenticateFromLinkController.handle(request, reply)
   );

@@ -1,36 +1,41 @@
-import { UserAlreadyExistsError } from "@/domain/application/use-cases/errors/user-already-exists-error";
 import { GetExpensesUseCase } from "@/domain/application/use-cases/get-expenses";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+import { ExpensePresenter } from "../../presenters/expense-presenter";
 
-const getExpensesBodySchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
+const getExpensesQuerySchema = z.object({
+  description: z.string().optional(),
+  category: z.string().optional(),
+  payment: z.string().optional(),
+  price: z.number().optional(),
+  createdAt: z.date().optional(),
+  pageIndex: z
+    .string()
+    .optional()
+    .default("1")
+    .transform(Number)
+    .pipe(z.number().min(1)),
 });
 
 export class GetExpensesController {
   constructor(private getExpenses: GetExpensesUseCase) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    const { name, email } = getExpensesBodySchema.parse(request.body);
+    const { description, category, payment, price, createdAt, pageIndex } =
+      getExpensesQuerySchema.parse(request.query);
 
     const result = await this.getExpenses.execute({
-      name,
-      email,
+      pageIndex,
     });
 
     if (result.isLeft()) {
-      const error = result.value;
-
-      if (error instanceof UserAlreadyExistsError) {
-        return reply.status(409).send({
-          message: error.message,
-        });
-      }
-
-      throw error;
+      throw new Error("Bad Request");
     }
 
-    return reply.status(201).send();
+    const expenses = result.value.expenses;
+
+    return reply.status(200).send({
+      expenses: expenses.map(ExpensePresenter.toHTTP),
+    });
   }
 }

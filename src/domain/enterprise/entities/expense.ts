@@ -6,7 +6,7 @@ export interface ExpenseProps {
   userId: UniqueEntityID;
   description: string;
   category: string;
-  method: string;
+  payment: string;
   price: number;
   createdAt: Date;
 }
@@ -24,8 +24,8 @@ export class Expense extends Entity<ExpenseProps> {
     return this.props.category;
   }
 
-  get method() {
-    return this.props.method;
+  get payment() {
+    return this.props.payment;
   }
   get price() {
     return this.props.price;

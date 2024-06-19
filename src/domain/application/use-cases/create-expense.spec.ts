@@ -17,7 +17,7 @@ describe("Create Expense Use Case", () => {
       userId: "1",
       description: "Netflix",
       category: "Streaming",
-      method: "Credit card",
+      payment: "Credit card",
       price: 55,
     });
 

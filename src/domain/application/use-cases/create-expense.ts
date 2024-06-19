@@ -7,7 +7,7 @@ export interface CreateExpenseUseCaseRequest {
   userId: string;
   description: string;
   category: string;
-  method: string;
+  payment: string;
   price: number;
 }
 
@@ -25,14 +25,14 @@ export class CreateExpenseUseCase {
     userId,
     description,
     category,
-    method,
+    payment,
     price,
   }: CreateExpenseUseCaseRequest): Promise<CreateExpenseUseCaseResponse> {
     const expense = Expense.create({
       userId: new UniqueEntityID(userId),
       description,
       category,
-      method,
+      payment,
       price,
     });
 
