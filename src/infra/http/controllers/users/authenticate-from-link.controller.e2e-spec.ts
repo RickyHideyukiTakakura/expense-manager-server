@@ -42,7 +42,6 @@ describe("Authenticate from link E2E", () => {
         redirect: "http://localhost:5143",
       });
 
-    expect(response.status).toBe(200);
     expect(response.headers["set-cookie"]).toBeDefined();
 
     const cookies = response.headers["set-cookie"][0];

@@ -30,7 +30,7 @@ export class AuthenticateFromLinkUseCase {
     }
 
     const accessToken = await this.encrpyter.encrypt({
-      sub: authLinkCode.userId,
+      sub: authLinkCode.userId.toString(),
     });
 
     await this.authLinksRepository.delete(authLinkCode);

@@ -36,11 +36,10 @@ export class AuthenticateFromLinkController {
 
     reply.setCookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: true,
       maxAge: 7 * 86400,
       path: "/",
     });
 
-    return reply.status(200).redirect(redirect);
+    return reply.redirect(redirect);
   }
 }

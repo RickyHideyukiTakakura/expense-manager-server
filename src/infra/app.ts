@@ -15,21 +15,19 @@ app.register(fastifyCors, {
   allowedHeaders: ["content-type"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
   origin: (origin, cb) => {
-    if (isTestEnv) {
+    const allowedOrigins = [env.AUTH_REDIRECT_URL];
+    if (!origin || allowedOrigins.includes(origin)) {
       cb(null, true);
-      return;
-    }
-
-    if (!origin) {
+    } else {
       cb(new Error("Not allowed"), false);
-      return;
     }
-
-    cb(null, true);
   },
 });
 
-app.register(fastifyJwt, { secret: env.JWT_SECRET_KEY });
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET_KEY,
+  cookie: { cookieName: "accessToken", signed: false },
+});
 
 app.register(fastifyCookie);
 

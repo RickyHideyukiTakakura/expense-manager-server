@@ -16,8 +16,10 @@ export class CreateExpenseController {
     const { description, category, payment, price } =
       createExpenseBodySchema.parse(request.body);
 
+    const userId = request.user.sub;
+
     const result = await this.createExpense.execute({
-      userId: request.user.sub,
+      userId,
       description,
       category,
       payment,

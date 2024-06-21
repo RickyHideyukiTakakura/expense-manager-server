@@ -38,6 +38,11 @@ describe("Create expense E2E", () => {
         price: 10,
       });
 
+    const expenseOnDatabase = await prisma.expense.findFirst({
+      where: { description: "Description test" },
+    });
+
     expect(response.statusCode).toEqual(201);
+    expect(expenseOnDatabase).toBeTruthy();
   });
 });

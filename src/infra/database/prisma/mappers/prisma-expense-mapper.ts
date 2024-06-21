@@ -17,7 +17,7 @@ export class PrismaExpenseMapper {
   }
 
   static toPrisma(expense: Expense): Prisma.ExpenseUncheckedCreateInput {
-    return {
+    const prismaExpense = {
       id: expense.id.toString(),
       userId: expense.userId.toString(),
       description: expense.description,
@@ -26,5 +26,7 @@ export class PrismaExpenseMapper {
       price: expense.price,
       createdAt: expense.createdAt,
     };
+
+    return prismaExpense;
   }
 }
