@@ -3,5 +3,7 @@ import { Expense } from "@/domain/enterprise/entities/expense";
 
 export interface ExpensesRepository {
   findMany(params: PaginationParams): Promise<Expense[]>;
+  findById(id: string): Promise<Expense | null>;
   create(expense: Expense): Promise<void>;
+  delete(expense: Expense): Promise<void>;
 }

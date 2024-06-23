@@ -17,11 +17,33 @@ export class PrismaExpensesRepository implements ExpensesRepository {
     return expenses.map(PrismaExpenseMapper.toDomain);
   }
 
+  async findById(id: string): Promise<Expense | null> {
+    const expense = await prisma.expense.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!expense) {
+      return null;
+    }
+
+    return PrismaExpenseMapper.toDomain(expense);
+  }
+
   async create(expense: Expense): Promise<void> {
     const data = PrismaExpenseMapper.toPrisma(expense);
 
     await prisma.expense.create({
       data,
+    });
+  }
+
+  async delete(expense: Expense): Promise<void> {
+    await prisma.expense.delete({
+      where: {
+        id: expense.id.toString(),
+      },
     });
   }
 }
