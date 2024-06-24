@@ -35,10 +35,12 @@ describe("Get expenses E2E", () => {
       expenseFactory.makePrismaExpense({
         userId: user.id,
         description: "Description 01",
+        createdAt: new Date(2024, 2, 10),
       }),
       expenseFactory.makePrismaExpense({
         userId: user.id,
         description: "Description 02",
+        createdAt: new Date(2024, 2, 20),
       }),
     ]);
 
@@ -51,10 +53,12 @@ describe("Get expenses E2E", () => {
     expect(response.body).toEqual({
       expenses: expect.arrayContaining([
         expect.objectContaining({
-          description: "Description 01",
+          description: "Description 02",
+          createdAt: new Date(2024, 2, 20).toISOString(),
         }),
         expect.objectContaining({
-          description: "Description 02",
+          description: "Description 01",
+          createdAt: new Date(2024, 2, 10).toISOString(),
         }),
       ]),
     });

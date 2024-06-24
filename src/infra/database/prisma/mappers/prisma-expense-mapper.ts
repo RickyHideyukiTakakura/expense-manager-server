@@ -11,6 +11,7 @@ export class PrismaExpenseMapper {
         category: raw.category,
         payment: raw.payment,
         price: Number(raw.price),
+        createdAt: raw.createdAt,
       },
       new UniqueEntityID(raw.id)
     );
