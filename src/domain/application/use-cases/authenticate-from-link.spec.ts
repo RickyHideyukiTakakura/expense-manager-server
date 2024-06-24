@@ -29,7 +29,7 @@ describe("Authenticate From Link Use Case", () => {
     await inMemoryUsersRepository.create(user);
 
     const authLinkCode = AuthLink.create({
-      userId: user.id.toString(),
+      userId: user.id,
       code: "auth-link-code",
     });
 

@@ -7,7 +7,7 @@ const createExpenseBodySchema = z.object({
   category: z.string(),
   payment: z.string(),
   price: z.number(),
-  createdAt: z.coerce.date().optional(),
+  createdAt: z.coerce.date(),
 });
 
 export class CreateExpenseController {

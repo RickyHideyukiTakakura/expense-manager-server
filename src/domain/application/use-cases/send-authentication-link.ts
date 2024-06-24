@@ -35,7 +35,7 @@ export class SendAuthenticationLinkUseCase {
 
     const authLink = AuthLink.create({
       code: authLinkCode,
-      userId: user.id.toString(),
+      userId: user.id,
     });
 
     await this.authLinksRepository.create(authLink);
