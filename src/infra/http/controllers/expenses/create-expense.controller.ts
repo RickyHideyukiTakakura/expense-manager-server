@@ -7,13 +7,14 @@ const createExpenseBodySchema = z.object({
   category: z.string(),
   payment: z.string(),
   price: z.number(),
+  createdAt: z.coerce.date().optional(),
 });
 
 export class CreateExpenseController {
   constructor(private createExpense: CreateExpenseUseCase) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    const { description, category, payment, price } =
+    const { description, category, payment, price, createdAt } =
       createExpenseBodySchema.parse(request.body);
 
     const userId = request.user.sub;
@@ -24,6 +25,7 @@ export class CreateExpenseController {
       category,
       payment,
       price,
+      createdAt,
     });
 
     if (result.isLeft()) {

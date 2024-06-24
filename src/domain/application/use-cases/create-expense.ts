@@ -9,6 +9,7 @@ export interface CreateExpenseUseCaseRequest {
   category: string;
   payment: string;
   price: number;
+  createdAt?: Date | null;
 }
 
 export type CreateExpenseUseCaseResponse = Either<
@@ -27,6 +28,7 @@ export class CreateExpenseUseCase {
     category,
     payment,
     price,
+    createdAt,
   }: CreateExpenseUseCaseRequest): Promise<CreateExpenseUseCaseResponse> {
     const expense = Expense.create({
       userId: new UniqueEntityID(userId),
@@ -34,6 +36,7 @@ export class CreateExpenseUseCase {
       category,
       payment,
       price,
+      createdAt,
     });
 
     await this.expensesRepository.create(expense);

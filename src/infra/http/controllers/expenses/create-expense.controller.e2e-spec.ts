@@ -36,10 +36,13 @@ describe("Create expense E2E", () => {
         category: "Category test",
         payment: "Payment test",
         price: 10,
+        createdAt: new Date(2024, 6, 11).toISOString(),
       });
 
     const expenseOnDatabase = await prisma.expense.findFirst({
-      where: { description: "Description test" },
+      where: {
+        description: "Description test",
+      },
     });
 
     expect(response.statusCode).toEqual(201);

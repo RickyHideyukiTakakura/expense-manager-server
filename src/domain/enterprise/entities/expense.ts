@@ -8,7 +8,7 @@ export interface ExpenseProps {
   category: string;
   payment: string;
   price: number;
-  createdAt: Date;
+  createdAt?: Date | null;
 }
 
 export class Expense extends Entity<ExpenseProps> {
