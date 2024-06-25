@@ -28,6 +28,7 @@ export class CreateExpenseUseCase {
     category,
     payment,
     price,
+    createdAt,
   }: CreateExpenseUseCaseRequest): Promise<CreateExpenseUseCaseResponse> {
     const expense = Expense.create({
       userId: new UniqueEntityID(userId),
@@ -35,6 +36,7 @@ export class CreateExpenseUseCase {
       category,
       payment,
       price,
+      createdAt,
     });
 
     await this.expensesRepository.create(expense);

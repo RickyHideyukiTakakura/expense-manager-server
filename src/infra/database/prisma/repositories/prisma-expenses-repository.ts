@@ -5,13 +5,19 @@ import { prisma } from "@/infra/lib/prisma";
 import { PrismaExpenseMapper } from "../mappers/prisma-expense-mapper";
 
 export class PrismaExpensesRepository implements ExpensesRepository {
+  async findTotalItems(): Promise<number> {
+    const totalItems = await prisma.expense.count();
+
+    return totalItems;
+  }
+
   async findMany({ pageIndex }: PaginationParams): Promise<Expense[]> {
     const expenses = await prisma.expense.findMany({
       orderBy: {
         createdAt: "desc",
       },
-      take: 20,
-      skip: (pageIndex - 1) * 20,
+      take: 10,
+      skip: (pageIndex - 1) * 10,
     });
 
     return expenses.map(PrismaExpenseMapper.toDomain);

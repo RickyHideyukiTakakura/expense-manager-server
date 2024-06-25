@@ -33,9 +33,11 @@ export class GetExpensesController {
     }
 
     const expenses = result.value.expenses;
+    const totalItems = result.value.totalItems;
 
     return reply.status(200).send({
       expenses: expenses.map(ExpensePresenter.toHTTP),
+      totalItems,
     });
   }
 }

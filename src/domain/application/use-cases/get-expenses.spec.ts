@@ -31,7 +31,7 @@ describe("Get Expenses Use Case", () => {
     });
 
     expect(result.isRight()).toBe(true);
-    expect(inMemoryExpensesRepository.items).toHaveLength(3);
+    expect(result.value?.totalItems).toEqual(3);
     expect(result.value?.expenses).toEqual([
       expect.objectContaining({ createdAt: new Date(2024, 4, 22) }),
       expect.objectContaining({ createdAt: new Date(2024, 4, 21) }),

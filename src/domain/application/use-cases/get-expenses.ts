@@ -10,6 +10,7 @@ export type GetExpensesUseCaseResponse = Either<
   null,
   {
     expenses: Expense[];
+    totalItems: number;
   }
 >;
 
@@ -23,8 +24,11 @@ export class GetExpensesUseCase {
       pageIndex,
     });
 
+    const totalItems = await this.expensesRepository.findTotalItems();
+
     return right({
       expenses,
+      totalItems,
     });
   }
 }

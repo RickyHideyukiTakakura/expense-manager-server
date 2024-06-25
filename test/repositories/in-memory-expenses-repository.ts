@@ -5,6 +5,12 @@ import { Expense } from "@/domain/enterprise/entities/expense";
 export class InMemoryExpensesRepository implements ExpensesRepository {
   public items: Expense[] = [];
 
+  async findTotalItems() {
+    const totalItems = this.items.length;
+
+    return totalItems;
+  }
+
   async findMany({ pageIndex }: PaginationParams) {
     const expenses = this.items
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

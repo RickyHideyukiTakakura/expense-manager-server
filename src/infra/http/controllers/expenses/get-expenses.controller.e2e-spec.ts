@@ -61,6 +61,7 @@ describe("Get expenses E2E", () => {
           createdAt: new Date(2024, 2, 10).toISOString(),
         }),
       ]),
+      totalItems: 2,
     });
   });
 });
