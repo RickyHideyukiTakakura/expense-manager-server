@@ -24,7 +24,7 @@ describe("Authenticate from link E2E", () => {
     await app.close();
   });
 
-  it("should be able to authenticate a user using link", async () => {
+  it("should be able to authenticate an user using link", async () => {
     const user = await userFactory.makePrismaUser({
       name: "John Doe",
       email: "johndoe@example.com",
@@ -48,5 +48,31 @@ describe("Authenticate from link E2E", () => {
 
     expect(cookies).toContain("accessToken");
     expect(response.header["location"]).toBe("http://localhost:5143");
+  });
+
+  it("should be able to sign out an user", async () => {
+    const user = await userFactory.makePrismaUser({
+      name: "John Doe",
+      email: "johndoe@gmail.com",
+    });
+
+    const authLink = await authLinkFactory.makePrismaAuthLink({
+      userId: user.id,
+      code: "test-auth-code",
+    });
+
+    const responseAuth = await request(app.server)
+      .get("/auth-links/authenticate")
+      .query({
+        code: authLink.code,
+        redirect: "http://localhost:5143",
+      });
+
+    responseAuth.headers["set-cookie"][0];
+
+    const response = await request(app.server).post("/sign-out").send();
+
+    expect(response.headers["set-cookie"][0]).toContain("accessToken=;");
+    expect(response.statusCode).toEqual(200);
   });
 });
