@@ -64,4 +64,54 @@ describe("Get expenses E2E", () => {
       totalItems: 2,
     });
   });
+
+  it("should be able to get filtered expenses", async () => {
+    const user = await userFactory.makePrismaUser();
+
+    const accessToken = app.jwt.sign({
+      sub: user.id.toString(),
+    });
+
+    await Promise.all([
+      expenseFactory.makePrismaExpense({
+        userId: user.id,
+        description: "Description 01",
+        category: "CategoryTest",
+        createdAt: new Date(2024, 2, 10),
+      }),
+      expenseFactory.makePrismaExpense({
+        userId: user.id,
+        description: "Description 02",
+        category: "CategoryTest",
+        createdAt: new Date(2024, 2, 10),
+      }),
+      expenseFactory.makePrismaExpense({
+        userId: user.id,
+        description: "Description 03",
+        createdAt: new Date(2024, 2, 20),
+      }),
+    ]);
+
+    const response = await request(app.server)
+      .get("/expenses?category=CategoryTest")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send();
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.body).toEqual({
+      expenses: expect.arrayContaining([
+        expect.objectContaining({
+          description: "Description 01",
+          category: "CategoryTest",
+          createdAt: new Date(2024, 2, 10).toISOString(),
+        }),
+        expect.objectContaining({
+          description: "Description 02",
+          category: "CategoryTest",
+          createdAt: new Date(2024, 2, 10).toISOString(),
+        }),
+      ]),
+      totalItems: 2,
+    });
+  });
 });

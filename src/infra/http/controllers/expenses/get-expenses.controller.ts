@@ -7,7 +7,6 @@ const getExpensesQuerySchema = z.object({
   description: z.string().optional(),
   category: z.string().optional(),
   payment: z.string().optional(),
-  price: z.number().optional(),
   createdAt: z.date().optional(),
   pageIndex: z
     .string()
@@ -21,11 +20,15 @@ export class GetExpensesController {
   constructor(private getExpenses: GetExpensesUseCase) {}
 
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    const { description, category, payment, price, createdAt, pageIndex } =
+    const { description, category, payment, createdAt, pageIndex } =
       getExpensesQuerySchema.parse(request.query);
 
     const result = await this.getExpenses.execute({
       pageIndex,
+      description,
+      category,
+      payment,
+      createdAt,
     });
 
     if (result.isLeft()) {

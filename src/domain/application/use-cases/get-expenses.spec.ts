@@ -39,6 +39,82 @@ describe("Get Expenses Use Case", () => {
     ]);
   });
 
+  it("should be able to fetch filtered expenses", async () => {
+    await inMemoryExpensesRepository.create(
+      makeExpense({
+        description: "Description test",
+      })
+    );
+
+    await inMemoryExpensesRepository.create(
+      makeExpense({
+        category: "Category test",
+      })
+    );
+
+    await inMemoryExpensesRepository.create(
+      makeExpense({
+        payment: "Payment test",
+      })
+    );
+
+    await inMemoryExpensesRepository.create(
+      makeExpense({ createdAt: new Date(2024, 4, 20) })
+    );
+
+    const resultDescription = await sut.execute({
+      pageIndex: 1,
+      description: "Description test",
+    });
+
+    const resultCategory = await sut.execute({
+      pageIndex: 1,
+      category: "Category test",
+    });
+
+    const resultPayment = await sut.execute({
+      pageIndex: 1,
+      payment: "Payment test",
+    });
+
+    const resultCreatedAt = await sut.execute({
+      pageIndex: 1,
+      createdAt: new Date(2024, 4, 20),
+    });
+
+    expect(resultDescription.value?.expenses).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          description: "Description test",
+        }),
+      ])
+    );
+
+    expect(resultCategory.value?.expenses).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          category: "Category test",
+        }),
+      ])
+    );
+
+    expect(resultPayment.value?.expenses).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          payment: "Payment test",
+        }),
+      ])
+    );
+
+    expect(resultCreatedAt.value?.expenses).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          createdAt: new Date(2024, 4, 20),
+        }),
+      ])
+    );
+  });
+
   it("should be able to fetch paginated expenses", async () => {
     for (let i = 1; i <= 22; i++) {
       await inMemoryExpensesRepository.create(makeExpense());

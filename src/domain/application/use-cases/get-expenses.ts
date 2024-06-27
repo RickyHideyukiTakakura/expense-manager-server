@@ -4,6 +4,10 @@ import { ExpensesRepository } from "../repositories/expenses-repository";
 
 export interface GetExpensesUseCaseRequest {
   pageIndex: number;
+  description?: string;
+  category?: string;
+  payment?: string;
+  createdAt?: Date;
 }
 
 export type GetExpensesUseCaseResponse = Either<
@@ -19,12 +23,26 @@ export class GetExpensesUseCase {
 
   async execute({
     pageIndex,
+    description,
+    category,
+    payment,
+    createdAt,
   }: GetExpensesUseCaseRequest): Promise<GetExpensesUseCaseResponse> {
     const expenses = await this.expensesRepository.findMany({
       pageIndex,
+      description,
+      category,
+      payment,
+      createdAt,
     });
 
-    const totalItems = await this.expensesRepository.findTotalItems();
+    const totalItems = await this.expensesRepository.findTotalItems({
+      pageIndex,
+      description,
+      category,
+      payment,
+      createdAt,
+    });
 
     return right({
       expenses,

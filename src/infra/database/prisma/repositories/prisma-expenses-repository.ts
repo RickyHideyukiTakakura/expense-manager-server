@@ -1,18 +1,42 @@
-import { PaginationParams } from "@/core/repositories/pagination-params";
+import { ExpenseParams } from "@/core/repositories/expense-params";
 import { ExpensesRepository } from "@/domain/application/repositories/expenses-repository";
 import { Expense } from "@/domain/enterprise/entities/expense";
 import { prisma } from "@/infra/lib/prisma";
 import { PrismaExpenseMapper } from "../mappers/prisma-expense-mapper";
 
 export class PrismaExpensesRepository implements ExpensesRepository {
-  async findTotalItems(): Promise<number> {
-    const totalItems = await prisma.expense.count();
+  async findTotalItems({
+    description,
+    category,
+    payment,
+    createdAt,
+  }: ExpenseParams): Promise<number> {
+    const totalItems = await prisma.expense.count({
+      where: {
+        description: description ? description : undefined,
+        category: category ? category : undefined,
+        payment: payment ? payment : undefined,
+        createdAt: createdAt ? createdAt : undefined,
+      },
+    });
 
     return totalItems;
   }
 
-  async findMany({ pageIndex }: PaginationParams): Promise<Expense[]> {
+  async findMany({
+    pageIndex,
+    description,
+    category,
+    payment,
+    createdAt,
+  }: ExpenseParams): Promise<Expense[]> {
     const expenses = await prisma.expense.findMany({
+      where: {
+        description: description ? description : undefined,
+        category: category ? category : undefined,
+        payment: payment ? payment : undefined,
+        createdAt: createdAt ? createdAt : undefined,
+      },
       orderBy: {
         createdAt: "desc",
       },

@@ -36,8 +36,6 @@ describe("Get profile E2E", () => {
       .set("Authorization", `Bearer ${accessToken}`)
       .send();
 
-    console.log(response);
-
     expect(response.statusCode).toEqual(200);
     expect(response.body).toEqual({
       user: expect.objectContaining({
