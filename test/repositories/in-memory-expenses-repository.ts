@@ -12,13 +12,23 @@ export class InMemoryExpensesRepository implements ExpensesRepository {
     createdAt,
   }: ExpenseParams) {
     const totalItems = this.items
-      .filter((item) => (description ? item.description === description : true))
-      .filter((item) => (category ? item.category === category : true))
-      .filter((item) => (payment ? item.payment === payment : true))
       .filter((item) =>
-        createdAt
-          ? item.createdAt.toISOString() === createdAt.toISOString()
+        description
+          ? item.description.toLowerCase().includes(description.toLowerCase())
           : true
+      )
+      .filter((item) =>
+        category
+          ? item.category.toLowerCase().includes(category.toLowerCase())
+          : true
+      )
+      .filter((item) =>
+        payment
+          ? item.payment.toLowerCase().includes(payment.toLowerCase())
+          : true
+      )
+      .filter((item) =>
+        createdAt ? item.createdAt.toISOString() === createdAt : true
       );
 
     return totalItems.length;
@@ -32,13 +42,23 @@ export class InMemoryExpensesRepository implements ExpensesRepository {
     createdAt,
   }: ExpenseParams) {
     const expenses = this.items
-      .filter((item) => (description ? item.description === description : true))
-      .filter((item) => (category ? item.category === category : true))
-      .filter((item) => (payment ? item.payment === payment : true))
       .filter((item) =>
-        createdAt
-          ? item.createdAt.toISOString() === createdAt.toISOString()
+        description
+          ? item.description.toLowerCase().includes(description.toLowerCase())
           : true
+      )
+      .filter((item) =>
+        category
+          ? item.category.toLowerCase().includes(category.toLowerCase())
+          : true
+      )
+      .filter((item) =>
+        payment
+          ? item.payment.toLowerCase().includes(payment.toLowerCase())
+          : true
+      )
+      .filter((item) =>
+        createdAt ? item.createdAt.toISOString() === createdAt : true
       )
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice((pageIndex - 1) * 10, pageIndex * 10);

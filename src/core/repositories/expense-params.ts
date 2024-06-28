@@ -3,5 +3,5 @@ export interface ExpenseParams {
   description?: string;
   category?: string;
   payment?: string;
-  createdAt?: Date;
+  createdAt?: string;
 }

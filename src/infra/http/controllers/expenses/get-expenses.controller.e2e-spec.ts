@@ -35,7 +35,7 @@ describe("Get expenses E2E", () => {
       expenseFactory.makePrismaExpense({
         userId: user.id,
         description: "Description 01",
-        createdAt: new Date(2024, 2, 10),
+        createdAt: new Date(2024, 2, 22),
       }),
       expenseFactory.makePrismaExpense({
         userId: user.id,
@@ -58,14 +58,14 @@ describe("Get expenses E2E", () => {
         }),
         expect.objectContaining({
           description: "Description 01",
-          createdAt: new Date(2024, 2, 10).toISOString(),
+          createdAt: new Date(2024, 2, 22).toISOString(),
         }),
       ]),
       totalItems: 2,
     });
   });
 
-  it("should be able to get filtered expenses", async () => {
+  it("should be able to get filtered date expenses", async () => {
     const user = await userFactory.makePrismaUser();
 
     const accessToken = app.jwt.sign({
@@ -76,13 +76,13 @@ describe("Get expenses E2E", () => {
       expenseFactory.makePrismaExpense({
         userId: user.id,
         description: "Description 01",
-        category: "CategoryTest",
+        category: "Category Test",
         createdAt: new Date(2024, 2, 10),
       }),
       expenseFactory.makePrismaExpense({
         userId: user.id,
         description: "Description 02",
-        category: "CategoryTest",
+        category: "Category Test",
         createdAt: new Date(2024, 2, 10),
       }),
       expenseFactory.makePrismaExpense({
@@ -92,8 +92,10 @@ describe("Get expenses E2E", () => {
       }),
     ]);
 
+    const filteredByDate = new Date(2024, 2, 10).toISOString();
+
     const response = await request(app.server)
-      .get("/expenses?category=CategoryTest")
+      .get(`/expenses?createdAt=${filteredByDate}`)
       .set("Authorization", `Bearer ${accessToken}`)
       .send();
 
@@ -102,12 +104,12 @@ describe("Get expenses E2E", () => {
       expenses: expect.arrayContaining([
         expect.objectContaining({
           description: "Description 01",
-          category: "CategoryTest",
+          category: "Category Test",
           createdAt: new Date(2024, 2, 10).toISOString(),
         }),
         expect.objectContaining({
           description: "Description 02",
-          category: "CategoryTest",
+          category: "Category Test",
           createdAt: new Date(2024, 2, 10).toISOString(),
         }),
       ]),

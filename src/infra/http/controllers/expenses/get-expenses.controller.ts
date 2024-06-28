@@ -7,7 +7,7 @@ const getExpensesQuerySchema = z.object({
   description: z.string().optional(),
   category: z.string().optional(),
   payment: z.string().optional(),
-  createdAt: z.date().optional(),
+  createdAt: z.string().optional(),
   pageIndex: z
     .string()
     .optional()

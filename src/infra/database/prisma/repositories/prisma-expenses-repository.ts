@@ -13,9 +13,15 @@ export class PrismaExpensesRepository implements ExpensesRepository {
   }: ExpenseParams): Promise<number> {
     const totalItems = await prisma.expense.count({
       where: {
-        description: description ? description : undefined,
-        category: category ? category : undefined,
-        payment: payment ? payment : undefined,
+        description: description
+          ? { contains: description, mode: "insensitive" }
+          : undefined,
+        category: category
+          ? { contains: category, mode: "insensitive" }
+          : undefined,
+        payment: payment
+          ? { contains: payment, mode: "insensitive" }
+          : undefined,
         createdAt: createdAt ? createdAt : undefined,
       },
     });
@@ -32,9 +38,15 @@ export class PrismaExpensesRepository implements ExpensesRepository {
   }: ExpenseParams): Promise<Expense[]> {
     const expenses = await prisma.expense.findMany({
       where: {
-        description: description ? description : undefined,
-        category: category ? category : undefined,
-        payment: payment ? payment : undefined,
+        description: description
+          ? { contains: description, mode: "insensitive" }
+          : undefined,
+        category: category
+          ? { contains: category, mode: "insensitive" }
+          : undefined,
+        payment: payment
+          ? { contains: payment, mode: "insensitive" }
+          : undefined,
         createdAt: createdAt ? createdAt : undefined,
       },
       orderBy: {

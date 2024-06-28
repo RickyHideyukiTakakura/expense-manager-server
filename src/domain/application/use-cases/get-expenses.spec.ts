@@ -64,22 +64,22 @@ describe("Get Expenses Use Case", () => {
 
     const resultDescription = await sut.execute({
       pageIndex: 1,
-      description: "Description test",
+      description: "Description",
     });
 
     const resultCategory = await sut.execute({
       pageIndex: 1,
-      category: "Category test",
+      category: "Category",
     });
 
     const resultPayment = await sut.execute({
       pageIndex: 1,
-      payment: "Payment test",
+      payment: "Payment",
     });
 
     const resultCreatedAt = await sut.execute({
       pageIndex: 1,
-      createdAt: new Date(2024, 4, 20),
+      createdAt: new Date(2024, 4, 20).toISOString(),
     });
 
     expect(resultDescription.value?.expenses).toEqual(

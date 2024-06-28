@@ -7,7 +7,7 @@ export interface GetExpensesUseCaseRequest {
   description?: string;
   category?: string;
   payment?: string;
-  createdAt?: Date;
+  createdAt?: string;
 }
 
 export type GetExpensesUseCaseResponse = Either<
