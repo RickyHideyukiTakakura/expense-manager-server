@@ -73,6 +73,17 @@ export class PrismaExpensesRepository implements ExpensesRepository {
     return PrismaExpenseMapper.toDomain(expense);
   }
 
+  async save(expense: Expense): Promise<void> {
+    const data = PrismaExpenseMapper.toPrisma(expense);
+
+    await prisma.expense.update({
+      where: {
+        id: expense.id.toString(),
+      },
+      data,
+    });
+  }
+
   async create(expense: Expense): Promise<void> {
     const data = PrismaExpenseMapper.toPrisma(expense);
 
