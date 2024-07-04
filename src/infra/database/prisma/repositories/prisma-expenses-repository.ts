@@ -73,6 +73,12 @@ export class PrismaExpensesRepository implements ExpensesRepository {
     return PrismaExpenseMapper.toDomain(expense);
   }
 
+  async findAll(): Promise<Expense[]> {
+    const expenses = await prisma.expense.findMany();
+
+    return expenses.map(PrismaExpenseMapper.toDomain);
+  }
+
   async save(expense: Expense): Promise<void> {
     const data = PrismaExpenseMapper.toPrisma(expense);
 

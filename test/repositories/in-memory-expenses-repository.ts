@@ -76,6 +76,12 @@ export class InMemoryExpensesRepository implements ExpensesRepository {
     return expense;
   }
 
+  async findAll() {
+    const expenses = this.items;
+
+    return expenses;
+  }
+
   async save(expense: Expense) {
     const itemIndex = this.items.findIndex(
       (item) => item.id.toString() === expense.id.toString()
