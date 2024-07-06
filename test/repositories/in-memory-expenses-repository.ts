@@ -1,9 +1,18 @@
 import { ExpenseParams } from "@/core/repositories/expense-params";
 import { ExpensesRepository } from "@/domain/application/repositories/expenses-repository";
 import { Expense } from "@/domain/enterprise/entities/expense";
+import dayjs from "dayjs";
 
 export class InMemoryExpensesRepository implements ExpensesRepository {
   public items: Expense[] = [];
+
+  async findByMonthWithYear(monthWithYear: string) {
+    const expenses = this.items.filter(
+      (expense) => dayjs(expense.createdAt).format("YYYY-MM") === monthWithYear
+    );
+
+    return expenses;
+  }
 
   async findTotalItems({
     description,

@@ -1,6 +1,7 @@
 import { CreateExpenseUseCase } from "@/domain/application/use-cases/create-expense";
 import { DeleteExpenseUseCase } from "@/domain/application/use-cases/delete-expense";
 import { GetExpensesUseCase } from "@/domain/application/use-cases/get-expenses";
+import { GetExpensesMonthlyAmountUseCase } from "@/domain/application/use-cases/get-expenses-monthly-amount";
 import { GetExpensesTotalAmountUseCase } from "@/domain/application/use-cases/get-expenses-total-amount";
 import { UpdateExpenseUseCase } from "@/domain/application/use-cases/update-expense";
 import { PrismaExpensesRepository } from "@/infra/database/prisma/repositories/prisma-expenses-repository";
@@ -8,6 +9,7 @@ import { verifyJWT } from "@/infra/middlewares/verify-jwt";
 import { FastifyInstance } from "fastify";
 import { CreateExpenseController } from "./create-expense.controller";
 import { DeleteExpenseController } from "./delete-expense.controller";
+import { GetExpensesMonthlyAmountController } from "./get-expenses-monthly-amount.controller";
 import { GetExpensesTotalAmountController } from "./get-expenses-total-amount.controller";
 import { GetExpensesController } from "./get-expenses.controller";
 import { UpdateExpenseController } from "./update-expense.controller";
@@ -31,6 +33,10 @@ export async function expensesRoutes(app: FastifyInstance) {
     new PrismaExpensesRepository()
   );
 
+  const getExpensesMonthlyAmountUseCase = new GetExpensesMonthlyAmountUseCase(
+    new PrismaExpensesRepository()
+  );
+
   const createExpenseController = new CreateExpenseController(
     createExpenseUseCase
   );
@@ -44,6 +50,8 @@ export async function expensesRoutes(app: FastifyInstance) {
   const getExpensesTotalAmountController = new GetExpensesTotalAmountController(
     getExpensesTotalAmountUseCase
   );
+  const getExpensesMonthlyAmountController =
+    new GetExpensesMonthlyAmountController(getExpensesMonthlyAmountUseCase);
 
   app.post("/expenses", { onRequest: verifyJWT }, (request, reply) =>
     createExpenseController.handle(request, reply)
@@ -61,5 +69,11 @@ export async function expensesRoutes(app: FastifyInstance) {
     "/expenses/total-amount",
     { onRequest: verifyJWT },
     (request, reply) => getExpensesTotalAmountController.handle(request, reply)
+  );
+  app.get(
+    "/expenses/monthly-amount",
+    { onRequest: verifyJWT },
+    (request, reply) =>
+      getExpensesMonthlyAmountController.handle(request, reply)
   );
 }

@@ -2,9 +2,26 @@ import { ExpenseParams } from "@/core/repositories/expense-params";
 import { ExpensesRepository } from "@/domain/application/repositories/expenses-repository";
 import { Expense } from "@/domain/enterprise/entities/expense";
 import { prisma } from "@/infra/lib/prisma";
+import dayjs from "dayjs";
 import { PrismaExpenseMapper } from "../mappers/prisma-expense-mapper";
 
 export class PrismaExpensesRepository implements ExpensesRepository {
+  async findByMonthWithYear(monthWithYear: string): Promise<Expense[]> {
+    const startOfMonth = dayjs(monthWithYear).startOf("month").toDate();
+    const endOfMonth = dayjs(monthWithYear).endOf("month").toDate();
+
+    const expenses = await prisma.expense.findMany({
+      where: {
+        createdAt: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+      },
+    });
+
+    return expenses.map(PrismaExpenseMapper.toDomain);
+  }
+
   async findTotalItems({
     description,
     category,
