@@ -5,7 +5,7 @@ import request from "supertest";
 import { ExpenseFactory } from "test/factories/make-expense";
 import { UserFactory } from "test/factories/make-user";
 
-describe("Get expenses monthly amount E2E", () => {
+describe("Get expenses daily amount E2E", () => {
   let app: FastifyInstance;
   let prisma: PrismaClient;
   let userFactory: UserFactory;
@@ -25,7 +25,7 @@ describe("Get expenses monthly amount E2E", () => {
     await app.close();
   });
 
-  it("should be able to get expenses monthly amount", async () => {
+  it("should be able to get expenses daily amount", async () => {
     const user = await userFactory.makePrismaUser();
 
     const accessToken = app.jwt.sign({
@@ -33,7 +33,7 @@ describe("Get expenses monthly amount E2E", () => {
     });
 
     const today = dayjs();
-    const lastMonth = today.subtract(1, "months");
+    const yesterday = today.subtract(1, "days");
 
     await Promise.all([
       expenseFactory.makePrismaExpense({
@@ -48,21 +48,21 @@ describe("Get expenses monthly amount E2E", () => {
       }),
       expenseFactory.makePrismaExpense({
         userId: user.id,
-        createdAt: lastMonth.toDate(),
+        createdAt: yesterday.toDate(),
         price: 15,
       }),
     ]);
 
     const response = await request(app.server)
-      .get("/expenses/monthly-amount")
+      .get("/expenses/daily-amount")
       .set("Authorization", `Bearer ${accessToken}`)
       .send();
 
     expect(response.statusCode).toEqual(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        currentMonthlyExpenseAmount: 30,
-        diffFromLastMonth: "100.00",
+        dailyExpenseAmount: 30,
+        diffFromYesterday: "100.00",
       })
     );
   });

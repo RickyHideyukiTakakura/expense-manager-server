@@ -14,6 +14,14 @@ export class InMemoryExpensesRepository implements ExpensesRepository {
     return expenses;
   }
 
+  async findByDay(day: string) {
+    const expenses = this.items.filter(
+      (expense) => dayjs(expense.createdAt).format("YYYY-MM-DD") === day
+    );
+
+    return expenses;
+  }
+
   async findTotalItems({
     description,
     category,

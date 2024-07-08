@@ -15,7 +15,7 @@ export class GetExpensesMonthlyAmountController {
 
     const currentMonthlyExpenseAmount =
       result.value.currentMonthlyExpenseAmount;
-    const diffFromLastMonth = result.value.diffFromLastMonth;
+    const diffFromLastMonth = result.value.diffFromLastMonth.toFixed(2);
 
     return reply.status(200).send({
       currentMonthlyExpenseAmount,

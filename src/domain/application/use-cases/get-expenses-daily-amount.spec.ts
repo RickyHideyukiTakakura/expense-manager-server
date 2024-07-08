@@ -1,22 +1,22 @@
 import dayjs from "dayjs";
 import { makeExpense } from "test/factories/make-expense";
 import { InMemoryExpensesRepository } from "test/repositories/in-memory-expenses-repository";
-import { GetExpensesMonthlyAmountUseCase } from "./get-expenses-monthly-amount";
+import { GetExpensesDailyAmountUseCase } from "./get-expenses-daily-amount";
 
 let inMemoryExpensesRepository: InMemoryExpensesRepository;
 
-let sut: GetExpensesMonthlyAmountUseCase;
+let sut: GetExpensesDailyAmountUseCase;
 
-describe("Get Expenses Monthly Amount Use Case", () => {
+describe("Get Expenses Daily Amount Use Case", () => {
   beforeEach(() => {
     inMemoryExpensesRepository = new InMemoryExpensesRepository();
 
-    sut = new GetExpensesMonthlyAmountUseCase(inMemoryExpensesRepository);
+    sut = new GetExpensesDailyAmountUseCase(inMemoryExpensesRepository);
   });
 
-  it("should be able to fetch monthly expenses amount", async () => {
+  it("should be able to fetch daily expenses amount", async () => {
     const today = dayjs();
-    const lastMonth = today.subtract(1, "months");
+    const yesterday = today.subtract(1, "days");
 
     await inMemoryExpensesRepository.create(
       makeExpense({ createdAt: today.toDate(), price: 10 })
@@ -27,7 +27,7 @@ describe("Get Expenses Monthly Amount Use Case", () => {
     );
 
     await inMemoryExpensesRepository.create(
-      makeExpense({ createdAt: lastMonth.toDate(), price: 15 })
+      makeExpense({ createdAt: yesterday.toDate(), price: 15 })
     );
 
     const result = await sut.execute();
@@ -35,8 +35,8 @@ describe("Get Expenses Monthly Amount Use Case", () => {
     expect(result.isRight()).toBe(true);
     expect(result.value).toEqual(
       expect.objectContaining({
-        currentMonthlyExpenseAmount: 30,
-        diffFromLastMonth: 100,
+        dailyExpenseAmount: 30,
+        diffFromYesterday: 100,
       })
     );
   });

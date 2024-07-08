@@ -22,6 +22,22 @@ export class PrismaExpensesRepository implements ExpensesRepository {
     return expenses.map(PrismaExpenseMapper.toDomain);
   }
 
+  async findByDay(day: string): Promise<Expense[]> {
+    const startOfDay = dayjs(day).startOf("days").toDate();
+    const endOfDay = dayjs(day).endOf("days").toDate();
+
+    const expenses = await prisma.expense.findMany({
+      where: {
+        createdAt: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+      },
+    });
+
+    return expenses.map(PrismaExpenseMapper.toDomain);
+  }
+
   async findTotalItems({
     description,
     category,
