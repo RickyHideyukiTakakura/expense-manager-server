@@ -93,6 +93,27 @@ export class InMemoryExpensesRepository implements ExpensesRepository {
     return expense;
   }
 
+  async findCategories() {
+    const categoryCount = this.items.reduce((acc, expense) => {
+      const { category } = expense;
+
+      if (acc[category]) {
+        acc[category]++;
+      } else {
+        acc[category] = 1;
+      }
+
+      return acc;
+    }, {});
+
+    const categoryCountsArray = Object.keys(categoryCount).map((category) => ({
+      category,
+      amount: categoryCount[category],
+    }));
+
+    return categoryCountsArray;
+  }
+
   async findAll() {
     const expenses = this.items;
 

@@ -1,5 +1,8 @@
 import { ExpenseParams } from "@/core/repositories/expense-params";
-import { ExpensesRepository } from "@/domain/application/repositories/expenses-repository";
+import {
+  CategoryProps,
+  ExpensesRepository,
+} from "@/domain/application/repositories/expenses-repository";
 import { Expense } from "@/domain/enterprise/entities/expense";
 import { prisma } from "@/infra/lib/prisma";
 import dayjs from "dayjs";
@@ -104,6 +107,20 @@ export class PrismaExpensesRepository implements ExpensesRepository {
     }
 
     return PrismaExpenseMapper.toDomain(expense);
+  }
+
+  async findCategories(): Promise<CategoryProps[]> {
+    const categories = await prisma.expense.groupBy({
+      by: ["category"],
+      _count: {
+        category: true,
+      },
+    });
+
+    return categories.map((item) => ({
+      category: item.category,
+      amount: item._count.category,
+    }));
   }
 
   async findAll(): Promise<Expense[]> {
