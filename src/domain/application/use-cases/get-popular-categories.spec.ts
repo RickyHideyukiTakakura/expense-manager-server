@@ -13,7 +13,7 @@ describe("Get Popular Categories Use Case", () => {
     sut = new GetPopularCategoriesUseCase(inMemoryExpensesRepository);
   });
 
-  it("should be able to fetch expenses", async () => {
+  it("should be able to get popular categories", async () => {
     await inMemoryExpensesRepository.create(
       makeExpense({ category: "Category 01" })
     );

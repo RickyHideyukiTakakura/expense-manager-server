@@ -1,4 +1,5 @@
 import { ExpenseParams } from "@/core/repositories/expense-params";
+import { PeriodParams } from "@/core/repositories/period-params";
 import { ExpensesRepository } from "@/domain/application/repositories/expenses-repository";
 import { Expense } from "@/domain/enterprise/entities/expense";
 import dayjs from "dayjs";
@@ -91,6 +92,36 @@ export class InMemoryExpensesRepository implements ExpensesRepository {
     }
 
     return expense;
+  }
+
+  async findByPeriod({ from, to }: PeriodParams) {
+    const expensesInPeriod = this.items.filter((expense) => {
+      const expenseDate = dayjs(expense.createdAt);
+
+      return (
+        expenseDate.isAfter(dayjs(from).subtract(1, "day")) &&
+        expenseDate.isBefore(dayjs(to).add(1, "day"))
+      );
+    });
+
+    const dailyExpenses = expensesInPeriod.reduce((acc, expense) => {
+      const date = dayjs(expense.createdAt).format("YYYY-MM-DD");
+
+      if (!acc[date]) {
+        acc[date] = 0;
+      }
+
+      acc[date] += expense.price;
+
+      return acc;
+    }, {} as Record<string, number>);
+
+    const result = Object.entries(dailyExpenses).map(([date, amount]) => ({
+      date: dayjs(date).toISOString(),
+      amount,
+    }));
+
+    return result;
   }
 
   async findCategories() {

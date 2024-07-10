@@ -1,7 +1,9 @@
 import { ExpenseParams } from "@/core/repositories/expense-params";
+import { PeriodParams } from "@/core/repositories/period-params";
 import {
   CategoryProps,
   ExpensesRepository,
+  PeriodProps,
 } from "@/domain/application/repositories/expenses-repository";
 import { Expense } from "@/domain/enterprise/entities/expense";
 import { prisma } from "@/infra/lib/prisma";
@@ -107,6 +109,29 @@ export class PrismaExpensesRepository implements ExpensesRepository {
     }
 
     return PrismaExpenseMapper.toDomain(expense);
+  }
+
+  async findByPeriod({ from, to }: PeriodParams): Promise<PeriodProps[]> {
+    const startDate = dayjs(from).startOf("day").toDate();
+    const endDate = dayjs(to).endOf("day").toDate();
+
+    const dailyExpenses = await prisma.expense.groupBy({
+      by: ["createdAt"],
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      _sum: {
+        price: true,
+      },
+    });
+
+    return dailyExpenses.map((item) => ({
+      date: dayjs(item.createdAt).startOf("day").toISOString(),
+      amount: Number(item._sum.price) || 0,
+    }));
   }
 
   async findCategories(): Promise<CategoryProps[]> {

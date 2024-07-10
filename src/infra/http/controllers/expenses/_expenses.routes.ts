@@ -2,6 +2,7 @@ import { CreateExpenseUseCase } from "@/domain/application/use-cases/create-expe
 import { DeleteExpenseUseCase } from "@/domain/application/use-cases/delete-expense";
 import { GetExpensesUseCase } from "@/domain/application/use-cases/get-expenses";
 import { GetExpensesDailyAmountUseCase } from "@/domain/application/use-cases/get-expenses-daily-amount";
+import { GetExpensesDailyAmountInPeriodUseCase } from "@/domain/application/use-cases/get-expenses-daily-amount-in-period";
 import { GetExpensesMonthlyAmountUseCase } from "@/domain/application/use-cases/get-expenses-monthly-amount";
 import { GetExpensesTotalAmountUseCase } from "@/domain/application/use-cases/get-expenses-total-amount";
 import { GetPopularCategoriesUseCase } from "@/domain/application/use-cases/get-popular-categories";
@@ -11,6 +12,7 @@ import { verifyJWT } from "@/infra/middlewares/verify-jwt";
 import { FastifyInstance } from "fastify";
 import { CreateExpenseController } from "./create-expense.controller";
 import { DeleteExpenseController } from "./delete-expense.controller";
+import { GetExpensesDailyAmountInPeriodController } from "./get-expenses-daily-amount-in-period.controller";
 import { GetExpensesDailyAmountController } from "./get-expenses-daily-amount.controller";
 import { GetExpensesMonthlyAmountController } from "./get-expenses-monthly-amount.controller";
 import { GetExpensesTotalAmountController } from "./get-expenses-total-amount.controller";
@@ -44,9 +46,13 @@ export async function expensesRoutes(app: FastifyInstance) {
   const getExpensesDailyAmountUseCase = new GetExpensesDailyAmountUseCase(
     new PrismaExpensesRepository()
   );
+
   const getPopularCategoriesUseCase = new GetPopularCategoriesUseCase(
     new PrismaExpensesRepository()
   );
+
+  const getExpensesDailyAmountInPeriodUseCase =
+    new GetExpensesDailyAmountInPeriodUseCase(new PrismaExpensesRepository());
 
   const createExpenseController = new CreateExpenseController(
     createExpenseUseCase
@@ -70,6 +76,10 @@ export async function expensesRoutes(app: FastifyInstance) {
   const getPopularCategoriesController = new GetPopularCategoriesController(
     getPopularCategoriesUseCase
   );
+  const getExpensesDailyAmountInPeriodController =
+    new GetExpensesDailyAmountInPeriodController(
+      getExpensesDailyAmountInPeriodUseCase
+    );
 
   app.post("/expenses", { onRequest: verifyJWT }, (request, reply) =>
     createExpenseController.handle(request, reply)
@@ -103,5 +113,11 @@ export async function expensesRoutes(app: FastifyInstance) {
     "/expenses/popular-categories",
     { onRequest: verifyJWT },
     (request, reply) => getPopularCategoriesController.handle(request, reply)
+  );
+  app.get(
+    "/expenses/daily-amount-period",
+    { onRequest: verifyJWT },
+    (request, reply) =>
+      getExpensesDailyAmountInPeriodController.handle(request, reply)
   );
 }
