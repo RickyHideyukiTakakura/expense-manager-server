@@ -1,6 +1,8 @@
 import { WrongCredentialsError } from "@/domain/application/use-cases/errors/wrong-credentials-error";
 import { SendAuthenticationLinkUseCase } from "@/domain/application/use-cases/send-authentication-link";
 import { env } from "@/infra/env";
+import { resend } from "@/infra/mail/client";
+import { AuthenticationMagicLinkTemplate } from "@/infra/mail/template/authentication-magic-link";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -37,6 +39,16 @@ export class SendAuthenticationLinkController {
     authLink.searchParams.set("redirect", env.AUTH_REDIRECT_URL);
 
     console.log(authLink.toString());
+
+    await resend.emails.send({
+      from: "Expense Manager <naoresponda@expense-manager.dev>",
+      to: email,
+      subject: "[Expense Manager] Link para login",
+      react: AuthenticationMagicLinkTemplate({
+        userEmail: email,
+        authLink: authLink.toString(),
+      }),
+    });
 
     return reply.status(200).send();
   }
