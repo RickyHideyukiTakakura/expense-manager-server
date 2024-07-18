@@ -14,15 +14,7 @@ app.register(fastifyCors, {
   credentials: true,
   allowedHeaders: ["content-type"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
-  origin: (origin, cb) => {
-    console.log(`Origin: ${origin}`); // Debugging line
-    if (!origin || allowedOrigins.includes(origin)) {
-      cb(null, true);
-    } else {
-      console.log(`Blocked origin: ${origin}`); // Debugging line
-      cb(new Error("Not allowed"), false);
-    }
-  },
+  origin: true,
 });
 
 app.register(fastifyJwt, {
