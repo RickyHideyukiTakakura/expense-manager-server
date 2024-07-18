@@ -1,7 +1,6 @@
 import { fastifyCookie } from "@fastify/cookie";
 import { fastifyCors } from "@fastify/cors";
 import { fastifyJwt } from "@fastify/jwt";
-import { config } from "dotenv";
 import { fastify } from "fastify";
 import { ZodError } from "zod";
 import { env } from "./env";
@@ -9,19 +8,18 @@ import { routes } from "./http/controllers/routes";
 
 export const app = fastify();
 
-config();
-
-const isTestEnv = env.NODE_ENV === "test";
+const allowedOrigins = [env.AUTH_REDIRECT_URL];
 
 app.register(fastifyCors, {
   credentials: true,
   allowedHeaders: ["content-type"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
   origin: (origin, cb) => {
-    const allowedOrigins = [env.AUTH_REDIRECT_URL];
+    console.log(`Origin: ${origin}`); // Debugging line
     if (!origin || allowedOrigins.includes(origin)) {
       cb(null, true);
     } else {
+      console.log(`Blocked origin: ${origin}`); // Debugging line
       cb(new Error("Not allowed"), false);
     }
   },
