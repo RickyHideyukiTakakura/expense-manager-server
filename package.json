@@ -8,7 +8,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
-    "test:e2e:watch": "vitest --config ./vitest.config.e2e.ts"
+    "test:e2e:watch": "vitest --config ./vitest.config.e2e.ts",
+    "postinstall": "npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
