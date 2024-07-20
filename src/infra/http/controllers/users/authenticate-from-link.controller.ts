@@ -1,5 +1,6 @@
 import { AuthenticateFromLinkUseCase } from "@/domain/application/use-cases/authenticate-from-link";
 import { AuthLinkCodeNotFoundError } from "@/domain/application/use-cases/errors/auth-link-code-not-found";
+import { env } from "@/infra/env";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -36,7 +37,8 @@ export class AuthenticateFromLinkController {
 
     reply.setCookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: 7 * 86400,
       path: "/",
     });

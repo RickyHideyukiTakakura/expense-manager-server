@@ -11,10 +11,10 @@ export const app = fastify();
 const allowedOrigins = [env.AUTH_REDIRECT_URL];
 
 app.register(fastifyCors, {
+  origin: env.NODE_ENV === "production" ? env.AUTH_REDIRECT_URL : true,
   credentials: true,
   allowedHeaders: ["content-type"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
-  origin: true,
 });
 
 app.register(fastifyJwt, {
