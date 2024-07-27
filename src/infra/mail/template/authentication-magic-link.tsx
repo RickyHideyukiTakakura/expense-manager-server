@@ -23,7 +23,7 @@ export function AuthenticationMagicLinkTemplate({
   userEmail,
   authLink,
 }: AuthenticationMagicLinkTemplateProps) {
-  const previewText = `Faça login na Pizza Shop`;
+  const previewText = `Faça login no Expense Manager`;
 
   return (
     <Html>
